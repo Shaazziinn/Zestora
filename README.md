@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zestora Hospitality Solution — Website
 
-## Getting Started
+Premium, production-ready marketing site for **Zestora Hospitality Solution**, a
+Bengaluru-based foodservice & FMCG distribution partner for restaurants, cloud
+kitchens, QSRs, caterers, food retailers and HoReCa businesses.
 
-First, run the development server:
+Editorial hospitality aesthetic: warm cream canvas, deep-olive primary,
+muted-brass accent, with the brand's cobalt blue used sparingly as a "zest"
+highlight and in the logo.
+
+## Stack
+
+- **Next.js 16** (App Router, Turbopack) + **TypeScript**
+- **Tailwind CSS v4** (tokens in `src/app/globals.css` `@theme`)
+- **Motion** (`motion/react`) for reveals, parallax, micro-interactions
+- Pseudo-3D via CSS/SVG (cursor-reactive tilt + float) — no WebGL, reduced-motion safe
+- Fonts: **Cormorant Garamond** (display) + **Manrope** (body) via `next/font`
+- All imagery is custom-generated editorial visuals, optimized to WebP (58–182 KB)
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build (all routes prerender static)
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`/` Home · `/about` · `/services` · `/products` · `/industries` · `/contact`
+Plus generated `sitemap.xml`, `robots.txt`, and an SVG favicon (`src/app/icon.svg`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content & contact
 
-## Learn More
+Single source of truth: **`src/lib/site.ts`** (name, email, phone, nav,
+categories, supply-chain steps). Update once, it propagates everywhere.
 
-To learn more about Next.js, take a look at the following resources:
+- Email: Hello@zestorahospitality.com
+- Phone: 96454 56262
+- The contact form composes a prefilled email via `mailto:` and shows a success
+  state. To wire a real backend, replace the `onSubmit` handler in
+  `src/components/ContactForm.tsx`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Logo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Uses the **official logo**, extracted from the supplied artwork into transparent
+PNGs (`public/logo-mark*.png`, `public/logo-word*.png`, `public/logo-full*.png`)
+via `scripts/extract-logo.mjs`. `src/components/Logo.tsx` composes mark + wordmark;
+`variant="mono"` swaps to the white version for dark surfaces. Favicon is
+`src/app/icon.png` (mark on cream). To refresh from new artwork, update the source
+path in `scripts/extract-logo.mjs` and re-run `node scripts/extract-logo.mjs`.
 
-## Deploy on Vercel
+## Regenerating imagery
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Source prompts live in `scripts/gen-images.mjs`. Optimize any new PNGs with:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+node scripts/optimize-images.mjs   # PNG -> WebP, resizes, deletes source PNG
+```
+
+## Deploy
+
+Optimized for Vercel (zero config). `next build` produces fully static routes;
+images are served through the Next Image Optimizer.
