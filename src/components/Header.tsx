@@ -25,16 +25,26 @@ export default function Header() {
   useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [open]);
+
+  const isHome = pathname === "/";
+  const solid = scrolled || !isHome;
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        scrolled
+        solid
           ? "border-b border-line/70 bg-cream/80 backdrop-blur-xl shadow-[0_8px_30px_-18px_rgba(36,61,47,0.4)]"
           : "border-b border-transparent bg-transparent"
       }`}
