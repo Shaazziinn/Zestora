@@ -42,79 +42,82 @@ export default function Header() {
   const solid = scrolled || !isHome;
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        solid
-          ? "border-b border-line/70 bg-cream/80 backdrop-blur-xl shadow-[0_8px_30px_-18px_rgba(36,61,47,0.4)]"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-[var(--h)] max-w-[1280px] items-center justify-between px-5 sm:px-8 [--h:74px] lg:[--h:84px]">
-        <Link href="/" aria-label={`${site.name} — home`} className="relative z-10">
-          <Logo />
-        </Link>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          solid
+            ? "border-b border-line/70 bg-cream/80 backdrop-blur-xl shadow-[0_8px_30px_-18px_rgba(36,61,47,0.4)]"
+            : "border-b border-transparent bg-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-[var(--h)] max-w-[1280px] items-center justify-between px-5 sm:px-8 [--h:74px] lg:[--h:84px]">
+          <Link href="/" aria-label={`${site.name} — home`} className="relative z-10">
+            <Logo />
+          </Link>
 
-        {/* desktop nav */}
-        <nav className="hidden items-center gap-1 lg:flex">
-          {nav.map((item) => {
-            const active =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative rounded-full px-4 py-2 text-[0.92rem] transition-colors duration-300 ${
-                  active ? "text-olive" : "text-muted hover:text-ink"
-                }`}
-              >
-                {item.label}
-                {active && (
-                  <motion.span
-                    layoutId="nav-dot"
-                    className="absolute inset-x-4 -bottom-0.5 h-px bg-brass"
-                    transition={{ duration: 0.4, ease: EASE }}
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+          {/* desktop nav */}
+          <nav className="hidden items-center gap-1 lg:flex">
+            {nav.map((item) => {
+              const active =
+                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative rounded-full px-4 py-2 text-[0.92rem] transition-colors duration-300 ${
+                    active ? "text-olive" : "text-muted hover:text-ink"
+                  }`}
+                >
+                  {item.label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-dot"
+                      className="absolute inset-x-4 -bottom-0.5 h-px bg-brass"
+                      transition={{ duration: 0.4, ease: EASE }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <div className="hidden lg:block">
-          <Button href="/contact" size="md" withArrow>
-            Partner With Zestora
-          </Button>
-        </div>
-
-        {/* mobile toggle */}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line/80 bg-ivory/60 backdrop-blur lg:hidden"
-        >
-          <span className="sr-only">Menu</span>
-          <div className="flex flex-col items-center gap-[5px]">
-            <span
-              className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
-                open ? "translate-y-[6.5px] rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
-                open ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
-                open ? "-translate-y-[6.5px] -rotate-45" : ""
-              }`}
-            />
+          <div className="hidden lg:block">
+            <Button href="/contact" size="md" withArrow>
+              Partner With Zestora
+            </Button>
           </div>
-        </button>
-      </div>
 
-      {/* mobile full-screen menu */}
+          {/* mobile toggle */}
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line/80 bg-ivory/60 backdrop-blur lg:hidden"
+          >
+            <span className="sr-only">Menu</span>
+            <div className="flex flex-col items-center gap-[5px]">
+              <span
+                className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
+                  open ? "translate-y-[6.5px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
+                  open ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`block h-[1.5px] w-5 bg-ink transition-all duration-300 ${
+                  open ? "-translate-y-[6.5px] -rotate-45" : ""
+                }`}
+              />
+            </div>
+          </button>
+        </div>
+      </header>
+
+      {/* mobile full-screen menu — rendered outside <header> so it sits in the
+          root stacking context at z-40, below the header (z-50) but above all page content */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -122,7 +125,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="fixed inset-0 z-0 flex flex-col bg-cream lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col bg-cream lg:hidden"
           >
             <div className="grain pointer-events-none absolute inset-0" />
             <div className="relative flex h-full flex-col justify-between px-6 pb-10 pt-28">
@@ -180,6 +183,6 @@ export default function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
